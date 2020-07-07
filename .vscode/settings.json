@@ -1,0 +1,2 @@
+{"python.linting.pylintArgs": ["--generate-members"]
+}
