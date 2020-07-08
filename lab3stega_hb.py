@@ -97,6 +97,7 @@ def data_after_change(data,mes,index):
     mes_bin = string_to_binary(mes)
     # берем n 8х8 блок, в которых мы будем встраивать информацию
     # n это количество битов сообщения (на каждом блоке встраивать 1 бит сообщения)
+    # 16+64*len(mes_bin) 
     data_of_blocks = data[16:(16+64*len(mes_bin))] 
 
     # разделить информацию на блоки, 
@@ -119,8 +120,10 @@ def data_after_change(data,mes,index):
     # К каждому блоку применить обратное двумерное дискретное косинусное преобразование
     # Собрать все блоки воедино
     data_inverse_DCT_blocks = reconstruct_image(blocks_after_quantization,len(mes_bin))
-    # Сохранение новых информаций в data
+    # сохранение новых значений яркости в изображении
     j = 0
+    # 16 - начальная позиция встраивать информации
+    # 64 - количество коэффтов 1ого блока
     for i in range(16,16+64*len(mes_bin)):
         data[i] = data_inverse_DCT_blocks[j]
         j += 1
@@ -139,6 +142,7 @@ def read_data(data,index):
 
     lenght_mes = binary_to_decimal(lenght_mes_bin)
     mes = ''
+    # преобразование с компонента нормер 16 до 16 + 64* количество битов сообщения
     data_of_blocks = data[16:(16+64*lenght_mes*8)] # 1 символ нужно 8 битов, знаем количество битов мы встраиваем
 
     blocks_after_quantization = image_to_blocks(data_of_blocks,lenght_mes*8)
